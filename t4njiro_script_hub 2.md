@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T4NJIRO SCRIPT | Roblox Script Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #dc2626;
+            --primary-glow: rgba(220, 38, 38, 0.4);
+            --bg-dark: #09090b;
+            --card-bg: rgba(18, 18, 24, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Hyperspace Starfield Background Animation */
+        .stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #180d12 0%, #050508 100%);
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: warp linear infinite;
+        }
+
+        @keyframes warp {
+            0% {
+                transform: scale(0.1) translateZ(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1.5) translateZ(0);
+                opacity: 1;
+            }
+        }
+
+        /* App Wrapper */
+        .app-wrapper {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        /* Top Navbar */
+        .navbar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 24px;
+            padding: 20px 40px;
+            background: rgba(9, 9, 11, 0.6);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            color: var(--text-main);
+        }
+
+        .nav-link i {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 60px 20px 40px 20px;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #ef4444;
+            margin-bottom: 24px;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            background: linear-gradient(to bottom, #ffffff 30%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 36px;
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 540px;
+            margin-bottom: 40px;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(24, 24, 32, 0.8);
+            border: 1px solid var(--border-color);
+            padding: 16px 20px 16px 52px;
+            border-radius: 16px;
+            color: var(--text-main);
+            font-size: 15px;
+            outline: none;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow), 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Filter Controls & Header */
+        .content-section {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(24, 24, 32, 0.6);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        /* Script Cards Grid */
+        .script-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 24px;
+        }
+
+        .script-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+            backdrop-filter: blur(16px);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .script-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(220, 38, 38, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px var(--primary-glow);
+        }
+
+        .card-preview {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            background: #0f0f13;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.85;
+            transition: transform 0.5s ease;
+        }
+
+        .script-card:hover .card-preview img {
+            transform: scale(1.05);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #facc15;
+        }
+
+        .card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .card-info h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .card-info p {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .copy-btn {
+            width: 100%;
+            background: rgba(220, 38, 38, 0.15);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        /* Notification Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #181820;
+            border: 1px solid rgba(220, 38, 38, 0.4);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            box-init: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px var(--primary-glow);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: #22c55e;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .script-grid {
+                grid-template-columns: 1fr;
+            }
+            .navbar {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Starfield Animation Background -->
+    <div class="stars-container" id="starsContainer"></div>
+
+    <div class="app-wrapper">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <a href="#" class="nav-link"><i class="fa-solid fa-key"></i> Key System</a>
+            <a href="#" class="nav-link"><i class="fa-brands fa-telegram"></i> Telegram</a>
+            <a href="#" class="nav-link"><i class="fa-solid fa-users"></i> Group Telegram</a>
+        </nav>
+
+        <!-- Hero -->
+        <header class="hero">
+            <div class="brand-badge">
+                <i class="fa-solid fa-code"></i> ROBLOX SCRIPT HUB
+            </div>
+            <h1>T4NJIRO SCRIPT</h1>
+            <p>T4NJIRO SCRIPT FREE</p>
+
+            <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search by script name or game..." onkeyup="filterScripts()">
+            </div>
+        </header>
+
+        <!-- Script List Section -->
+        <main class="content-section">
+            <div class="section-header">
+                <div class="section-title">T4NJIRO SCRIPT</div>
+                <div class="filters">
+                    <button class="filter-btn active" onclick="setFilter('all', this)">ALL SCRIPT</button>
+                    <button class="filter-btn" onclick="setFilter('key', this)">NO KEY</button>
+                    <button class="filter-btn" onclick="setFilter('paid', this)">KEY</button>
+                </div>
+            </div>
+
+            <div class="script-grid" id="scriptGrid">
+                <!-- Card 1 -->
+                <div class="script-card" data-category="key" data-name="script blade ball">
+                    <div class="card-preview">
+                        <span class="card-badge">NO KEY</span>
+                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=600&q=80" alt="Blade Ball Script">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-info">
+                            <h3>Script Blade Ball</h3>
+                            <p>BLADE BALL</p>
+                        </div>
+                        <button class="copy-btn" onclick="copyScript('loadstring(game:HttpGet(\"https://t4njiro.script/bladeball\"))()', 'Script Blade Ball')">
+                            <i class="fa-solid fa-copy"></i> Copy Script
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="script-card" data-category="paid" data-name="script blox fruits">
+                    <div class="card-preview">
+                        <span class="card-badge" style="color: #ef4444;">KEY</span>
+                        <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=600&q=80" alt="Blox Fruits Script">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-info">
+                            <h3>Script Blox Fruit</h3>
+                            <p>BLOX FRUITS</p>
+                        </div>
+                        <button class="copy-btn" onclick="copyScript('loadstring(game:HttpGet(\"https://t4njiro.script/bloxfruits\"))()', 'Script Blox Fruit')">
+                            <i class="fa-solid fa-copy"></i> Copy Script
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="script-card" data-category="key" data-name="script anime fighters">
+                    <div class="card-preview">
+                        <span class="card-badge">NO KEY</span>
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80" alt="Anime Fighters Script">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-info">
+                            <h3>Script Anime Fighters</h3>
+                            <p>ANIME FIGHTERS</p>
+                        </div>
+                        <button class="copy-btn" onclick="copyScript('loadstring(game:HttpGet(\"https://t4njiro.script/animefighters\"))()', 'Script Anime Fighters')">
+                            <i class="fa-solid fa-copy"></i> Copy Script
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toastNotification">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toastText">Script copied to clipboard!</span>
+    </div>
+
+    <script>
+        // Generate Starfield
+        const starsContainer = document.getElementById('starsContainer');
+        const numStars = 100;
+
+        for (let i = 0; i < numStars; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const xy = Math.random() * 100;
+            const size = Math.random() * 2 + 1;
+            const duration = Math.random() * 3 + 2;
+            const delay = Math.random() * 5;
+
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.animationDuration = `${duration}s`;
+            star.style.animationDelay = `${delay}s`;
+
+            starsContainer.appendChild(star);
+        }
+
+        // Copy Script Functionality
+        function copyScript(scriptText, scriptName) {
+            navigator.clipboard.writeText(scriptText).then(() => {
+                showToast(`Successfully copied "${scriptName}"!`);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // Toast Notification Handler
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            const toastText = document.getElementById('toastText');
+            toastText.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Filter Controls
+        let currentFilter = 'all';
+
+        function setFilter(category, btn) {
+            currentFilter = category;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterScripts();
+        }
+
+        function filterScripts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.script-card');
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                const category = card.getAttribute('data-category');
+                
+                const matchesSearch = name.includes(query);
+                const matchesCategory = (currentFilter === 'all' || category === currentFilter);
+
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
